@@ -1,14 +1,18 @@
 import { Avatar, AvatarGroup, Box, Flex, HStack, Text } from "@chakra-ui/react";
-import { Menu } from "./components/sidebar-components/menu";
+import { Menu } from "./menu";
+import React from "react";
 
+interface LayoutProps {
+  children?: React.ReactNode;
+}
 
-export default function Layout() {
+export default function Layout({ children }: LayoutProps) {
   return (
     <Flex minH="150vh">
       {/* SOL MENU */}
       <Box w="360px" borderRight="1px solid" p="4">
         {/* Kullanıcı Profili */}
-        <HStack spaceX="3" mb={30} >
+        <HStack spaceX="3" mb={30}>
           <AvatarGroup>
             <Avatar.Root>
               <Avatar.Image src="https://i.pravatar.cc/300" alt="profile" />
@@ -18,13 +22,17 @@ export default function Layout() {
 
           <HStack spaceX="1" flexDir="column" align="flex-start">
             <Text fontWeight="bold" fontSize="sm">
-              Zekeriya Başan 
+              Zekeriya Başan
             </Text>
-           
           </HStack>
         </HStack>
 
         <Menu />
+      </Box>
+
+      {/* SAYFA İÇERİĞİ (ÇOK ÖNEMLİ) */}
+      <Box flex="1" p="6">
+        {children}
       </Box>
     </Flex>
   );
