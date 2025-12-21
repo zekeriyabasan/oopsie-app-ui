@@ -1,17 +1,31 @@
-import { Button, Input, Stack, Heading } from "@chakra-ui/react";
+"use client";
+
+import { Button, Field, Input, Stack } from "@chakra-ui/react";
+import { useForm } from "react-hook-form";
+import { PasswordInput } from "../../../components/ui/password-input";
 import { useState } from "react";
 import { useAuthContext } from "../../../app/providers/hooks/useAuthcontext";
 
-export const LoginForm = () => {
-  const { login } = useAuthContext();
-  const [userName, setUserName] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+interface FormValues {
+  username: string;
+  password: string;
+}
 
-  const handleSubmit = async () => {
+const LoginForm = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>();
+
+  const { login } = useAuthContext();
+  const [loading, setLoading] = useState(false);
+  const onSubmit = handleSubmit((data) => submitLogin(data));
+
+  const submitLogin = async (data: FormValues) => {
     try {
       setLoading(true);
-      await login(userName, password);
+      await login(data.username, data.password);
     } catch {
       alert("Kullanıcı adı veya şifre hatalı");
     } finally {
@@ -20,29 +34,25 @@ export const LoginForm = () => {
   };
 
   return (
-    <Stack spaceX={4}>
-      <Heading size="md">Giriş Yap</Heading>
+    <form onSubmit={onSubmit}>
+      <Stack gap="4" align="flex-start" maxW="sm">
+        <Field.Root invalid={!!errors.username}>
+          <Field.Label>Username</Field.Label>
+          <Input {...register("username")} />
+          <Field.ErrorText>{errors.username?.message}</Field.ErrorText>
+        </Field.Root>
 
-      <Input
-        placeholder="Kullanıcı Adı"
-        value={userName}
-        onChange={(e) => setUserName(e.target.value)}
-      />
+        <Field.Root invalid={!!errors.password}>
+          <Field.Label>Password</Field.Label>
+          <PasswordInput {...register("password")} />
+          <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
+        </Field.Root>
 
-      <Input
-        type="password"
-        placeholder="Şifre"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-
-      <Button
-        colorScheme="blue"
-        loading={loading}
-        onClick={handleSubmit}
-      >
-        Giriş Yap
-      </Button>
-    </Stack>
+        <Button loading={loading} type="submit">
+          Submit
+        </Button>
+      </Stack>
+    </form>
   );
 };
+export default LoginForm;
