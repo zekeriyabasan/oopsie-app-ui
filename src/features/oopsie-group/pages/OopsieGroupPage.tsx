@@ -1,6 +1,6 @@
 import { Blockquote, Flex } from "@chakra-ui/react";
 
-export default function OopsieGroup() {
+export default function OopsieGroupPage() {
   const items = [
     {
       id: 1,

@@ -8,7 +8,10 @@ export const Menu = () => {
         <Link to="/oopsie-group">Listem</Link>
       </Text>
       <Separator />
-      <Text> <Link to="/user-relation">Kullanıcılarım</Link></Text>
+      <Text>
+        {" "}
+        <Link to="/user-relation">Kullanıcılarım</Link>
+      </Text>
       <Separator />
       <Text>Sohbetler</Text>
     </Stack>

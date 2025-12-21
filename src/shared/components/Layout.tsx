@@ -1,6 +1,6 @@
 import { Avatar, AvatarGroup, Box, Flex, HStack, Text } from "@chakra-ui/react";
-import { Menu } from "./menu";
 import React from "react";
+import { Menu } from "./Menu";
 
 interface LayoutProps {
   children?: React.ReactNode;

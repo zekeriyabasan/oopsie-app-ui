@@ -25,21 +25,20 @@ export default function UserRelation() {
   ];
   return (
     <Flex gap="4" direction="column">
-        {items.map((item) => (
-             <HStack key={item.id} gap="4">
+      {items.map((item) => (
+        <HStack key={item.id} gap="4">
           <Avatar.Root>
             <Avatar.Fallback name={item.name} />
             <Avatar.Image src={item.image} />
           </Avatar.Root>
           <Stack gap="0">
-            <Text  fontWeight="medium">{item.name}</Text>
+            <Text fontWeight="medium">{item.name}</Text>
             <Text color="fg.muted" textStyle="sm">
               {item.name}
             </Text>
           </Stack>
         </HStack>
-        
-        ))}
+      ))}
     </Flex>
   );
 }
