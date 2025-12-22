@@ -1,18 +1,33 @@
-import { Avatar, AvatarGroup, Box, Flex, HStack, Text } from "@chakra-ui/react";
-import React from "react";
+import {
+  Avatar,
+  AvatarGroup,
+  Box,
+  Flex,
+  HStack,
+  Text,
+  Spacer,
+  IconButton,
+} from "@chakra-ui/react";
+import { Outlet, useNavigate } from "react-router-dom";
 import { Menu } from "./Menu";
+import { useAuthContext } from "../../app/providers/hooks/useAuthcontext";
+import { FiLogOut } from "react-icons/fi";
 
-interface LayoutProps {
-  children?: React.ReactNode;
-}
+export default function Layout() {
+  const { logout } = useAuthContext();
+  const navigate = useNavigate();
 
-export default function Layout({ children }: LayoutProps) {
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
+
   return (
     <Flex minH="150vh">
       {/* SOL MENU */}
       <Box w="360px" borderRight="1px solid" p="4">
         {/* Kullanıcı Profili */}
-        <HStack spaceX="3" mb={30}>
+        <HStack cursor={"pointer"} mb={4} w="100%">
           <AvatarGroup>
             <Avatar.Root>
               <Avatar.Image src="https://i.pravatar.cc/300" alt="profile" />
@@ -20,19 +35,32 @@ export default function Layout({ children }: LayoutProps) {
             </Avatar.Root>
           </AvatarGroup>
 
-          <HStack spaceX="1" flexDir="column" align="flex-start">
-            <Text fontWeight="bold" fontSize="sm">
-              Zekeriya Başan
-            </Text>
-          </HStack>
+          <Text fontWeight="bold" fontSize="sm">
+            Zekeriya Başan
+          </Text>
+
+          {/* BOŞLUK → butonu sağa iter */}
+          <Spacer />
+
+          <IconButton
+            as="button"
+            type="button"
+            aria-label="Çıkış Yap"
+            size="sm"
+            colorScheme="red"
+            variant="solid"
+            onClick={handleLogout}
+          >
+            <FiLogOut />
+          </IconButton>
         </HStack>
 
         <Menu />
       </Box>
 
-      {/* SAYFA İÇERİĞİ (ÇOK ÖNEMLİ) */}
+      {/* SAYFA İÇERİĞİ */}
       <Box flex="1" p="6">
-        {children}
+        <Outlet />
       </Box>
     </Flex>
   );

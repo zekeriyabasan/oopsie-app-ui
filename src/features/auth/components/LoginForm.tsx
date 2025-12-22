@@ -1,10 +1,9 @@
-"use client";
-
-import { Button, Field, Input, Stack } from "@chakra-ui/react";
+import { Button, Field, HStack, Input, Stack } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { PasswordInput } from "../../../components/ui/password-input";
 import { useState } from "react";
 import { useAuthContext } from "../../../app/providers/hooks/useAuthcontext";
+import { useNavigate } from "react-router-dom";
 
 interface FormValues {
   username: string;
@@ -19,6 +18,8 @@ const LoginForm = () => {
   } = useForm<FormValues>();
 
   const { login } = useAuthContext();
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
   const onSubmit = handleSubmit((data) => submitLogin(data));
 
@@ -48,9 +49,26 @@ const LoginForm = () => {
           <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
         </Field.Root>
 
-        <Button loading={loading} type="submit">
-          Submit
-        </Button>
+        <HStack w="100%" justify="space-between">
+          <Button
+            loading={loading}
+            type="submit"
+            colorScheme="red"
+            variant="solid"
+            w="48%"
+          >
+            Login
+          </Button>
+
+          <Button
+            onClick={() => navigate("/signup")}
+            colorScheme="red"
+            variant="solid"
+            w="48%"
+          >
+            Sign Up
+          </Button>
+        </HStack>
       </Stack>
     </form>
   );

@@ -3,15 +3,13 @@ import { login as loginApi } from "../../features/auth/api/auth-api";
 import { clearTokens, setTokens } from "../../shared/utils/token-storage";
 import type { AuthContextType } from "../../features/auth/types/auth.types";
 
-
-
 // eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext<AuthContextType>(null!);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem("access_token")
-  );
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return !!localStorage.getItem("access_token");
+  });
 
   const login = async (username: string, password: string) => {
     const token = await loginApi({
@@ -34,4 +32,3 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     </AuthContext.Provider>
   );
 };
-

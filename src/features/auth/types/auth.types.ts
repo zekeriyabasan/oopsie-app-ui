@@ -1,3 +1,13 @@
+export interface SignUpRequest {
+  firstName?: string;
+  lastName?: string;
+  userName: string;
+  password: string;
+  email?: string;
+  phoneNumber?: string;
+  roles?: string[];
+}
+
 export interface LoginRequest {
   userName: string;
   password: string;
@@ -13,3 +23,4 @@ export interface AuthContextType {
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
 }
+
