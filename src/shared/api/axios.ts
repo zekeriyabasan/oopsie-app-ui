@@ -1,14 +1,20 @@
 import axios from "axios";
 import { getAccessToken } from "../utils/token-storage";
 
-export const api = axios.create({
-  baseURL: import.meta.env.VITE_OOPSIE_API_URL,
-});
-
-api.interceptors.request.use((config) => {
+const setAuthToken = () => {
   const token = getAccessToken();
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    return `Bearer ${token}`;
   }
-  return config;
+};
+
+export const api = axios.create({
+  baseURL: import.meta.env.VITE_OOPSIE_API_URL,
+  headers: {
+    Authorization: setAuthToken(),
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
 });
+
+

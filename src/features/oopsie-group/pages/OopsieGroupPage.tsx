@@ -1,43 +1,82 @@
-import { Blockquote, Flex } from "@chakra-ui/react";
+import { Blockquote, Collapsible, Flex, Stack, Table } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { getUserOopsieGroups } from "../api/user-oopsie-group-api";
+import type { UserOopsieGroup } from "../types/user-oopsie-group.types";
+import { LuChevronRight } from "react-icons/lu";
 
 export default function OopsieGroupPage() {
-  const items = [
-    {
-      id: 1,
-      name: "Nue Camp",
-      description:
-        "Modern working space with all tools. Curabitur nec odio vel dui euismod fermentum.",
-      image: "https://picsum.photos/200/300?1",
-    },
-    {
-      id: 2,
-      name: "Tech Room",
-      description:
-        "Perfect space for hackathons. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      image: "https://picsum.photos/200/300?2",
-    },
-    {
-      id: 3,
-      name: "Chill Area",
-      description:
-        "Relax and take a break. Curabitur nec odio vel dui euismod fermentum.",
-      image: "https://picsum.photos/200/300?3",
-    },
-    {
-      id: 4,
-      name: "Meeting Lab",
-      description:
-        "Best place for team meetings and demos. Lorem ipsum dolor sit amet.",
-      image: "https://picsum.photos/200/300?4",
-    },
-  ];
+  const [groups, setGroups] = useState<UserOopsieGroup[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchGroups = async () => {
+      try {
+        const data = await getUserOopsieGroups();
+        setGroups(data);
+      } catch (error) {
+        console.error("Oopsie grupları alınamadı", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGroups();
+  }, []);
+
+  if (loading) {
+    return <div>Yükleniyor...</div>;
+  }
+
   return (
     <Flex gap="4" direction="column">
-      {items.map((item) => (
-        <Blockquote.Root>
-          <Blockquote.Content>{item.description}</Blockquote.Content>
+      {groups.map((item) => (
+        <Blockquote.Root key={item.id}>
+          <Blockquote.Content>
+            <Collapsible.Root defaultOpen>
+              <Collapsible.Trigger
+                paddingY="3"
+                display="flex"
+                gap="2"
+                alignItems="center"
+              >
+                <Collapsible.Indicator
+                  transition="transform 0.2s"
+                  _open={{ transform: "rotate(90deg)" }}
+                >
+                  <LuChevronRight />
+                </Collapsible.Indicator>
+                {item.group.name}
+              </Collapsible.Trigger>
+              <Collapsible.Content>
+                <Stack padding="4">
+                  <Table.Root size="sm" interactive>
+                    <Table.Header>
+                      <Table.Row>
+                        <Table.ColumnHeader>ID</Table.ColumnHeader>
+                        <Table.ColumnHeader>Text</Table.ColumnHeader>
+                        <Table.ColumnHeader textAlign="end">
+                          IsCompleted
+                        </Table.ColumnHeader>
+                      </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                      {item.group.oopsies.map((item) => (
+                        <Table.Row color={"colorPalette.800"} key={item.id}>
+                          <Table.Cell>{item.id}</Table.Cell>
+                          <Table.Cell>{item.text}</Table.Cell>
+                          <Table.Cell textAlign="end">
+                            {item.isCompleted}
+                          </Table.Cell>
+                        </Table.Row>
+                      ))}
+                    </Table.Body>
+                  </Table.Root>
+                </Stack>
+              </Collapsible.Content>
+            </Collapsible.Root>
+          </Blockquote.Content>
           <Blockquote.Caption>
-            <cite>{item.name}</cite>
+            <cite>{item.group.description}</cite>
           </Blockquote.Caption>
         </Blockquote.Root>
       ))}
