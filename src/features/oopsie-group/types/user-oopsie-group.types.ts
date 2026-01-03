@@ -12,3 +12,8 @@ export interface UserOopsieGroup extends BaseEntity{
   groupId: string;
   group: OopsieGroup;
 }
+
+export interface UserOopsieGroupDtoForInsertion{
+  userId: string;
+  groupId: string;
+}

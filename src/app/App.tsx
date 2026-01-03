@@ -6,6 +6,7 @@ import { LoginPage } from "../features/auth/pages/LoginPage";
 import { ProtectedRoute } from "./router/ProtectedRoute";
 import { PublicRoute } from "./router/PublicRoute";
 import SignUpPage from "../features/auth/pages/SignUpPage";
+import { ChatPage } from "../features/chat/pages/ChatPage";
 
 export default function App() {
   return (
@@ -39,6 +40,7 @@ export default function App() {
       >
         <Route path="oopsie-group" element={<OopsieGroupPage />} />
         <Route path="user-relation" element={<UserRelationPage />} />
+        <Route path="chat/:groupId" element={<ChatPage userName="ZEKO" />} />
       </Route>
     </Routes>
   );

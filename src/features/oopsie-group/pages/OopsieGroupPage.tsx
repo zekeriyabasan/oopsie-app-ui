@@ -20,10 +20,12 @@ import {
   LuTrash2,
   LuUserPlus,
 } from "react-icons/lu";
+import { useNavigate } from "react-router-dom";
 
 export default function OopsieGroupPage() {
   const [groups, setGroups] = useState<UserOopsieGroup[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchGroups = async () => {
@@ -92,6 +94,7 @@ export default function OopsieGroupPage() {
                   size="sm"
                   variant="ghost"
                   colorPalette="fg"
+                  onClick={() => navigate(`/chat/${group.groupId}`)}
                 >
                   <LuMessagesSquare />
                 </IconButton>
