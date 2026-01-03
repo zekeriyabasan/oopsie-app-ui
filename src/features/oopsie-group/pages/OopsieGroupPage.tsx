@@ -1,7 +1,6 @@
 import {
   Blockquote,
   Box,
-  Button,
   Collapsible,
   Flex,
   HStack,
@@ -14,15 +13,7 @@ import { getUserOopsieGroups } from "../api/user-oopsie-group-api";
 import type { UserOopsieGroup } from "../types/user-oopsie-group.types";
 import {
   LuChevronRight,
-  LuCircleArrowOutDownLeft,
-  LuCopy,
-  LuDelete,
-  LuMessageCircle,
-  LuMessageCircleDashed,
-  LuMessageCircleMore,
-  LuMessageCirclePlus,
-  LuMessageCircleReply,
-  LuMessageSquareHeart,
+  LuCircleCheckBig,
   LuMessagesSquare,
   LuPencil,
   LuPlus,
@@ -76,13 +67,11 @@ export default function OopsieGroupPage() {
                 {/* Grup adı – en solda */}
                 <Box fontWeight="medium">{group.group.name}</Box>
 
-                {/* 🔥 BU HER ŞEYİ ÇÖZER */}
                 <Spacer />
 
                 {/* Butonlar – en sağda */}
-                
 
-<IconButton
+                <IconButton
                   aria-label="Edit"
                   size="sm"
                   variant="ghost"
@@ -140,7 +129,7 @@ export default function OopsieGroupPage() {
                               <IconButton
                                 aria-label="Delete"
                                 size="sm"
-                                variant="surface"
+                                variant="ghost"
                                 colorPalette="red"
                               >
                                 <LuTrash2 />
@@ -150,20 +139,17 @@ export default function OopsieGroupPage() {
                                 aria-label="Share"
                                 size="sm"
                                 variant="ghost"
-                                colorPalette="green"
+                                colorPalette="blue"
                               >
                                 <LuPencil />
                               </IconButton>
                               <IconButton
-                                aria-label="Copy ID"
+                                aria-label="Tamamla"
                                 size="sm"
-                                variant="surface"
-                                colorPalette="orange"
-                                onClick={() =>
-                                  navigator.clipboard.writeText(o.id)
-                                }
+                                variant="ghost"
+                                colorPalette="green"
                               >
-                                <LuCopy />
+                                <LuCircleCheckBig />
                               </IconButton>
                             </HStack>
                           </Table.Cell>
