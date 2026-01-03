@@ -1,10 +1,12 @@
 import {
   Blockquote,
   Box,
+  Button,
   Collapsible,
   Flex,
   HStack,
   IconButton,
+  Spacer,
   Table,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -12,11 +14,20 @@ import { getUserOopsieGroups } from "../api/user-oopsie-group-api";
 import type { UserOopsieGroup } from "../types/user-oopsie-group.types";
 import {
   LuChevronRight,
+  LuCircleArrowOutDownLeft,
   LuCopy,
-  LuEggFried,
+  LuDelete,
+  LuMessageCircle,
+  LuMessageCircleDashed,
+  LuMessageCircleMore,
+  LuMessageCirclePlus,
+  LuMessageCircleReply,
+  LuMessageSquareHeart,
+  LuMessagesSquare,
   LuPencil,
   LuPlus,
   LuTrash2,
+  LuUserPlus,
 } from "react-icons/lu";
 
 export default function OopsieGroupPage() {
@@ -49,6 +60,7 @@ export default function OopsieGroupPage() {
           <Blockquote.Content w="100%">
             <Collapsible.Root defaultOpen>
               <Collapsible.Trigger
+                w="100%"
                 display="flex"
                 alignItems="center"
                 gap="2"
@@ -61,7 +73,39 @@ export default function OopsieGroupPage() {
                   <LuChevronRight />
                 </Collapsible.Indicator>
 
-                {group.group.name}
+                {/* Grup adı – en solda */}
+                <Box fontWeight="medium">{group.group.name}</Box>
+
+                {/* 🔥 BU HER ŞEYİ ÇÖZER */}
+                <Spacer />
+
+                {/* Butonlar – en sağda */}
+                
+
+<IconButton
+                  aria-label="Edit"
+                  size="sm"
+                  variant="ghost"
+                  colorPalette="fg"
+                >
+                  <LuPlus />
+                </IconButton>
+                <IconButton
+                  aria-label="Edit"
+                  size="sm"
+                  variant="ghost"
+                  colorPalette="fg"
+                >
+                  <LuUserPlus />
+                </IconButton>
+                <IconButton
+                  aria-label="Edit"
+                  size="sm"
+                  variant="ghost"
+                  colorPalette="fg"
+                >
+                  <LuMessagesSquare />
+                </IconButton>
               </Collapsible.Trigger>
 
               <Collapsible.Content w="100%">
