@@ -1,8 +1,23 @@
-import { Blockquote, Collapsible, Flex, Stack, Table } from "@chakra-ui/react";
+import {
+  Blockquote,
+  Box,
+  Collapsible,
+  Flex,
+  HStack,
+  IconButton,
+  Table,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { getUserOopsieGroups } from "../api/user-oopsie-group-api";
 import type { UserOopsieGroup } from "../types/user-oopsie-group.types";
-import { LuChevronRight } from "react-icons/lu";
+import {
+  LuChevronRight,
+  LuCopy,
+  LuEggFried,
+  LuPencil,
+  LuPlus,
+  LuTrash2,
+} from "react-icons/lu";
 
 export default function OopsieGroupPage() {
   const [groups, setGroups] = useState<UserOopsieGroup[]>([]);
@@ -28,16 +43,16 @@ export default function OopsieGroupPage() {
   }
 
   return (
-    <Flex gap="4" direction="column">
-      {groups.map((item) => (
-        <Blockquote.Root key={item.id}>
-          <Blockquote.Content>
+    <Flex direction="column" gap="4" w="100%">
+      {groups.map((group) => (
+        <Blockquote.Root key={group.id} w="100%">
+          <Blockquote.Content w="100%">
             <Collapsible.Root defaultOpen>
               <Collapsible.Trigger
-                paddingY="3"
                 display="flex"
-                gap="2"
                 alignItems="center"
+                gap="2"
+                py="2"
               >
                 <Collapsible.Indicator
                   transition="transform 0.2s"
@@ -45,39 +60,77 @@ export default function OopsieGroupPage() {
                 >
                   <LuChevronRight />
                 </Collapsible.Indicator>
-                {item.group.name}
+
+                {group.group.name}
               </Collapsible.Trigger>
-              <Collapsible.Content>
-                <Stack w="100vw"  padding="4">
-                  <Table.Root size="sm" interactive>
+
+              <Collapsible.Content w="100%">
+                <Box w="100%" minW={0} overflowX="auto">
+                  <Table.Root
+                    size="sm"
+                    w="100%"
+                    tableLayout="fixed"
+                    variant="outline"
+                  >
                     <Table.Header>
                       <Table.Row>
-                        <Table.ColumnHeader>ID</Table.ColumnHeader>
                         <Table.ColumnHeader>Text</Table.ColumnHeader>
-                        <Table.ColumnHeader textAlign="end">
+                        <Table.ColumnHeader w="120px">
                           IsCompleted
+                        </Table.ColumnHeader>
+                        <Table.ColumnHeader w="140px">
+                          Actions
                         </Table.ColumnHeader>
                       </Table.Row>
                     </Table.Header>
+
                     <Table.Body>
-                      {item.group.oopsies.map((item) => (
-                        <Table.Row color={"colorPalette.800"} key={item.id}>
-                          <Table.Cell>{item.id}</Table.Cell>
-                          <Table.Cell>{item.text}</Table.Cell>
-                          <Table.Cell textAlign="end">
-                            {item.isCompleted}
+                      {group.group.oopsies.map((o) => (
+                        <Table.Row key={o.id}>
+                          <Table.Cell>{o.text}</Table.Cell>
+                          <Table.Cell>
+                            {o.isCompleted ? "Yes" : "No"}
+                          </Table.Cell>
+                          <Table.Cell>
+                            <HStack justify="flex-start">
+                              <IconButton
+                                aria-label="Delete"
+                                size="sm"
+                                variant="surface"
+                                colorPalette="red"
+                              >
+                                <LuTrash2 />
+                              </IconButton>
+
+                              <IconButton
+                                aria-label="Share"
+                                size="sm"
+                                variant="ghost"
+                                colorPalette="green"
+                              >
+                                <LuPencil />
+                              </IconButton>
+                              <IconButton
+                                aria-label="Copy ID"
+                                size="sm"
+                                variant="surface"
+                                colorPalette="orange"
+                                onClick={() =>
+                                  navigator.clipboard.writeText(o.id)
+                                }
+                              >
+                                <LuCopy />
+                              </IconButton>
+                            </HStack>
                           </Table.Cell>
                         </Table.Row>
                       ))}
                     </Table.Body>
                   </Table.Root>
-                </Stack>
+                </Box>
               </Collapsible.Content>
             </Collapsible.Root>
           </Blockquote.Content>
-          <Blockquote.Caption>
-            <cite>{item.group.description}</cite>
-          </Blockquote.Caption>
         </Blockquote.Root>
       ))}
     </Flex>

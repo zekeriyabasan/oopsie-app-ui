@@ -23,14 +23,18 @@ export default function Layout() {
   };
 
   return (
-    <Flex w="100vw" minH="100vh">
-      {/* SOL MENU */}
-      <Box w="360px" borderRight="1px solid" p="4">
-        {/* Kullanıcı Profili */}
-        <HStack cursor={"pointer"} mb={4} w="100vw">
+    <Flex minH="100vh" w="100%">
+      {/* SIDEBAR */}
+      <Box
+        w="360px"
+        borderRight="1px solid"
+        p="4"
+        flexShrink={0}   // ❗ Sidebar ASLA daralmaz
+      >
+        <HStack mb={4}>
           <AvatarGroup>
             <Avatar.Root>
-              <Avatar.Image src="https://i.pravatar.cc/300" alt="profile" />
+              <Avatar.Image src="https://i.pravatar.cc/300" />
               <Avatar.Fallback>AB</Avatar.Fallback>
             </Avatar.Root>
           </AvatarGroup>
@@ -39,16 +43,12 @@ export default function Layout() {
             Zekeriya Başan
           </Text>
 
-          {/* BOŞLUK → butonu sağa iter */}
           <Spacer />
 
           <IconButton
-            as="button"
-            type="button"
             aria-label="Çıkış Yap"
             size="sm"
             colorScheme="red"
-            variant="solid"
             onClick={handleLogout}
           >
             <FiLogOut />
@@ -58,10 +58,17 @@ export default function Layout() {
         <Menu />
       </Box>
 
-      {/* SAYFA İÇERİĞİ */}
-      <Box flex="1" p="6">
+      {/* CONTENT */}
+      <Box
+        flex="1"
+        minW={0}          // 🔥 ALTIN KURAL
+        p="6"
+        overflow="auto"
+      >
         <Outlet />
       </Box>
     </Flex>
   );
 }
+
+

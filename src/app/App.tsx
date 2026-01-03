@@ -27,6 +27,7 @@ export default function App() {
           </PublicRoute>
         }
       />
+
       {/* PROTECTED */}
       <Route
         path="/"
