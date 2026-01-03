@@ -48,7 +48,7 @@ export default function OopsieGroupPage() {
                 {item.group.name}
               </Collapsible.Trigger>
               <Collapsible.Content>
-                <Stack padding="4">
+                <Stack w="100vw"  padding="4">
                   <Table.Root size="sm" interactive>
                     <Table.Header>
                       <Table.Row>

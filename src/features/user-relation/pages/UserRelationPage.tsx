@@ -24,7 +24,7 @@ export default function UserRelation() {
     },
   ];
   return (
-    <Flex gap="4" direction="column">
+    <Flex w="100vw" minH="100vh" gap="4" direction="column">
       {items.map((item) => (
         <HStack key={item.id} gap="4">
           <Avatar.Root>

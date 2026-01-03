@@ -23,11 +23,11 @@ export default function Layout() {
   };
 
   return (
-    <Flex minH="150vh">
+    <Flex w="100vw" minH="100vh">
       {/* SOL MENU */}
       <Box w="360px" borderRight="1px solid" p="4">
         {/* Kullanıcı Profili */}
-        <HStack cursor={"pointer"} mb={4} w="100%">
+        <HStack cursor={"pointer"} mb={4} w="100vw">
           <AvatarGroup>
             <Avatar.Root>
               <Avatar.Image src="https://i.pravatar.cc/300" alt="profile" />
