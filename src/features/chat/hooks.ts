@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { createOopsieConnection } from "./signalr";
-import type { GroupMessage } from "./types";
 import * as signalR from "@microsoft/signalr";
 import { useAuthContext } from "../../app/providers/hooks/useAuthcontext";
 
 export const useOopsieChat = (activeGroupId?: string) => {
   const { isAuthenticated } = useAuthContext();
-  const [messages, setMessages] = useState<GroupMessage[]>([]);
+  const [messages, setMessages] = useState<string[]>([]);
   const connectionRef = useRef<signalR.HubConnection | null>(null);
 
   // 🟩 Bağlantı kur
@@ -16,31 +15,17 @@ export const useOopsieChat = (activeGroupId?: string) => {
     const connection = createOopsieConnection();
     connectionRef.current = connection;
 
-    const onReceiveGroupMessage = (msg: GroupMessage) => {
+    connection.on("ReceiveGroupMessage", (msg: string) => {
       setMessages((prev) => [...prev, msg]);
-    };
+    });
 
-    const onReceiveNotification = (msg: string) => {
+    connection.on("ReceiveNotification", (msg: string) => {
       console.log("Bildirim:", msg);
-    };
+    });
 
-    connection.on("ReceiveGroupMessage", onReceiveGroupMessage);
-    connection.on("ReceiveNotification", onReceiveNotification);
-
-    const startConnection = async () => {
-      try {
-        await connection.start();
-        console.log("SignalR connected");
-      } catch (err) {
-        console.error("SignalR connection failed", err);
-      }
-    };
-
-    startConnection();
+    connection.start().catch(console.error);
 
     return () => {
-      connection.off("ReceiveGroupMessage", onReceiveGroupMessage);
-      connection.off("ReceiveNotification", onReceiveNotification);
       connection.stop();
     };
   }, [isAuthenticated]);
@@ -48,6 +33,10 @@ export const useOopsieChat = (activeGroupId?: string) => {
   // 🟨 Mesaj gönder
   const sendGroupMessage = async (message: string) => {
     if (!connectionRef.current) return;
+    if (!activeGroupId) {
+      console.warn("activeGroupId yok, mesaj gönderilmedi");
+      return;
+    }
 
     await connectionRef.current.invoke(
       "SendToGroupMessageAsync",

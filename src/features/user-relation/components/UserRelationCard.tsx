@@ -28,7 +28,7 @@ export const UserRelationCard = ({ relation, onEdit, onDelete }: Props) => {
       <HStack justify="space-between">
         <HStack gap="4">
           <Avatar.Root>
-            <Avatar.Fallback name={relation.RelationName} />
+            <Avatar.Fallback name={relation.relationName} />
             <Avatar.Image
               src={`https://api.dicebear.com/7.x/identicon/svg?seed=${relation.id}`}
             />
@@ -36,10 +36,10 @@ export const UserRelationCard = ({ relation, onEdit, onDelete }: Props) => {
 
           <Stack gap="0">
             <Text fontWeight="semibold">
-              {relation.RelationName}
+              {relation.relationName}
             </Text>
             <Text fontSize="sm" color="fg.muted">
-              Kullanıcı ilişkisi
+              {relation.relatedUserId}
             </Text>
           </Stack>
         </HStack>

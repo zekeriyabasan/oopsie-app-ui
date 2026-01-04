@@ -9,7 +9,7 @@ export const createOopsieConnection = () => {
   }
 
   return new signalR.HubConnectionBuilder()
-    .withUrl(`${import.meta.env.VITE_API_BASE_URL}/oopsieHub`, {
+    .withUrl(`${import.meta.env.VITE_OOPSIE_API_URL}/oopsieHub`, {
       accessTokenFactory: () => token,
       transport: signalR.HttpTransportType.WebSockets,
     })

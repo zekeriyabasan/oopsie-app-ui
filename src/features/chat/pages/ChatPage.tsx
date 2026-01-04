@@ -8,22 +8,15 @@ interface ChatPageProps {
   userName: string;
 }
 
-export const ChatPage: React.FC<ChatPageProps> = ({
-  userName,
-}) => {
+export const ChatPage: React.FC<ChatPageProps> = ({ userName }) => {
   const { groupId } = useParams<{ groupId: string }>();
   const { messages, sendGroupMessage } = useOopsieChat(groupId);
 
   return (
     <Box display="flex" flexDirection="column" h="100%">
       <Box flex="1" overflowY="auto" p={4}>
-        {messages.map((m, i) => (
-          <MessageBubble
-            key={i}
-            mine={m.senderUserName === userName}
-            user={m.senderUserName}
-            text={m.message}
-          />
+        {messages.map((m) => (
+          <MessageBubble mine={false} user={userName} text={m} />
         ))}
       </Box>
 
