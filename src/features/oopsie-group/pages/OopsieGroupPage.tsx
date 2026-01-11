@@ -12,6 +12,7 @@ import {
   Portal,
   Spacer,
   Table,
+  Textarea,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import {
@@ -29,9 +30,11 @@ import {
   LuUserPlus,
 } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
+import { addAnOopsie } from "../../oopsie/api/oopsie-api";
 
 export default function OopsieGroupPage() {
   const [userId, setUserId] = useState("");
+  const [oopsieText, setOopsieText] = useState("");
   const [groups, setGroups] = useState<UserOopsieGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -54,6 +57,23 @@ export default function OopsieGroupPage() {
   if (loading) {
     return <div>Yükleniyor...</div>;
   }
+  const addOopsie = async (groupId: string) => {
+    try {
+      setLoading(true);
+
+      await addAnOopsie({
+        text: oopsieText,
+        parentGroupId: groupId,
+      });
+
+      setOopsieText("");
+      // dialog otomatik kapanır (ActionTrigger sayesinde)
+    } catch (error) {
+      console.error("create error", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   const handleAssignUser = async (groupId: string) => {
     if (!userId) return;
 
@@ -99,15 +119,52 @@ export default function OopsieGroupPage() {
                 <Spacer />
 
                 {/* Butonlar – en sağda */}
+                <Dialog.Root>
+                  <Dialog.Trigger asChild>
+                    <IconButton
+                      aria-label="Edit"
+                      size="sm"
+                      variant="ghost"
+                      colorPalette="fg"
+                    >
+                      <LuPlus />
+                    </IconButton>
+                  </Dialog.Trigger>
+                  <Portal>
+                    <Dialog.Backdrop />
+                    <Dialog.Positioner>
+                      <Dialog.Content>
+                        <Dialog.Header>
+                          <Dialog.Title>Oopsie Ekle</Dialog.Title>
+                        </Dialog.Header>
+                        <Dialog.Body>
+                          <Textarea placeholder="Oopsie Text..."
+                            value={oopsieText}
+                            onChange={(e) => setOopsieText(e.target.value)}
+                            required
+                          />
+                        </Dialog.Body>
+                        <Dialog.Footer>
+                          <Dialog.ActionTrigger asChild>
+                            <Button variant="outline">Cancel</Button>
+                          </Dialog.ActionTrigger>
+                          <Button
+                            type="submit"
+                            onClick={() => {
+                              addOopsie(group.groupId);
+                            }}
+                          >
+                            Save
+                          </Button>
+                        </Dialog.Footer>
+                        <Dialog.CloseTrigger asChild>
+                          <CloseButton size="sm" />
+                        </Dialog.CloseTrigger>
+                      </Dialog.Content>
+                    </Dialog.Positioner>
+                  </Portal>
+                </Dialog.Root>
 
-                <IconButton
-                  aria-label="Edit"
-                  size="sm"
-                  variant="ghost"
-                  colorPalette="fg"
-                >
-                  <LuPlus />
-                </IconButton>
                 <Dialog.Root>
                   <Dialog.Trigger asChild>
                     <IconButton
@@ -144,7 +201,9 @@ export default function OopsieGroupPage() {
                           </Dialog.ActionTrigger>
                           <Button
                             type="submit"
-                            onClick={()=>{handleAssignUser(group.groupId)}}
+                            onClick={() => {
+                              handleAssignUser(group.groupId);
+                            }}
                           >
                             Save
                           </Button>

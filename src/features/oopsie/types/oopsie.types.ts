@@ -6,3 +6,8 @@ export interface Oopsie extends BaseEntity {
   text: string;
   isCompleted: boolean;
 }
+
+export interface OopsieDtoForInsertion {
+  text:string;
+  parentGroupId:string;
+}
