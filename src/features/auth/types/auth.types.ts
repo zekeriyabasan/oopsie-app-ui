@@ -18,9 +18,16 @@ export interface TokenDto {
   refreshToken: string;
 }
 
-export interface AuthContextType {
-  isAuthenticated: boolean;
-  login: (username: string, password: string) => Promise<void>;
-  logout: () => void;
+export interface UserLoginDto {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  tokenDto: TokenDto;
 }
 
+export interface AuthContextType {
+  isAuthenticated: boolean;
+  login: (username: string, password: string) => Promise<UserLoginDto>;
+  logout: () => void;
+}

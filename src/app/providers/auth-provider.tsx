@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
 import { login as loginApi } from "../../features/auth/api/auth-api";
-import { clearTokens, setTokens } from "../../shared/utils/token-storage";
+import { clearTokens, setUserSession } from "../../shared/utils/token-storage";
 import type { AuthContextType } from "../../features/auth/types/auth.types";
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -12,13 +12,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   });
 
   const login = async (username: string, password: string) => {
-    const token = await loginApi({
+    const response = await loginApi({
       userName: username,
       password,
     });
 
-    setTokens(token.accessToken, token.refreshToken);
+    setUserSession(response);
     setIsAuthenticated(true);
+
+    return response;
   };
 
   const logout = () => {

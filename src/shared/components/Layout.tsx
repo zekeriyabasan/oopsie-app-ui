@@ -12,10 +12,12 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { Menu } from "./Menu";
 import { useAuthContext } from "../../app/providers/hooks/useAuthcontext";
 import { FiLogOut } from "react-icons/fi";
+import { getUserInfo } from "../utils/token-storage";
 
 export default function Layout() {
   const { logout } = useAuthContext();
   const navigate = useNavigate();
+  const info = getUserInfo()
 
   const handleLogout = () => {
     logout();
@@ -40,7 +42,7 @@ export default function Layout() {
           </AvatarGroup>
 
           <Text fontWeight="bold" fontSize="sm">
-            Zekeriya Başan
+            {info.FirstName} {info.LastName}
           </Text>
 
           <Spacer />

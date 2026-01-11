@@ -1,15 +1,23 @@
 import {
   Blockquote,
   Box,
+  Button,
+  CloseButton,
   Collapsible,
+  Dialog,
   Flex,
   HStack,
   IconButton,
+  Input,
+  Portal,
   Spacer,
   Table,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { getUserOopsieGroups } from "../api/user-oopsie-group-api";
+import {
+  assignOopsieGroupToUser,
+  getUserOopsieGroups,
+} from "../api/user-oopsie-group-api";
 import type { UserOopsieGroup } from "../types/user-oopsie-group.types";
 import {
   LuChevronRight,
@@ -23,6 +31,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 export default function OopsieGroupPage() {
+  const [userId, setUserId] = useState("");
   const [groups, setGroups] = useState<UserOopsieGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -45,7 +54,25 @@ export default function OopsieGroupPage() {
   if (loading) {
     return <div>Yükleniyor...</div>;
   }
+  const handleAssignUser = async (groupId: string) => {
+    if (!userId) return;
 
+    try {
+      setLoading(true);
+
+      await assignOopsieGroupToUser({
+        userId,
+        groupId,
+      });
+
+      setUserId("");
+      // dialog otomatik kapanır (ActionTrigger sayesinde)
+    } catch (error) {
+      console.error("User assign error", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <Flex direction="column" gap="4" w="100%">
       {groups.map((group) => (
@@ -81,14 +108,55 @@ export default function OopsieGroupPage() {
                 >
                   <LuPlus />
                 </IconButton>
-                <IconButton
-                  aria-label="Edit"
-                  size="sm"
-                  variant="ghost"
-                  colorPalette="fg"
-                >
-                  <LuUserPlus />
-                </IconButton>
+                <Dialog.Root>
+                  <Dialog.Trigger asChild>
+                    <IconButton
+                      aria-label="Assign User"
+                      size="sm"
+                      variant="ghost"
+                      colorPalette="fg"
+                    >
+                      <LuUserPlus />
+                    </IconButton>
+                  </Dialog.Trigger>
+                  <Portal>
+                    <Dialog.Backdrop />
+                    <Dialog.Positioner>
+                      <Dialog.Content>
+                        <Dialog.Header>
+                          <Dialog.Title>Gruba Kullanıcı Ekle</Dialog.Title>
+                        </Dialog.Header>
+                        <Dialog.Body>
+                          <p>
+                            Grup sohbetleri ve kullanıcının grubu görebilmesi
+                            için kullanıcı id ile ekleme yapabilirsiniz.
+                          </p>
+                          <Input
+                            placeholder="Kullanıcı ID"
+                            value={userId}
+                            onChange={(e) => setUserId(e.target.value)}
+                            required
+                          />
+                        </Dialog.Body>
+                        <Dialog.Footer>
+                          <Dialog.ActionTrigger asChild>
+                            <Button variant="outline">Cancel</Button>
+                          </Dialog.ActionTrigger>
+                          <Button
+                            type="submit"
+                            onClick={()=>{handleAssignUser(group.groupId)}}
+                          >
+                            Save
+                          </Button>
+                        </Dialog.Footer>
+                        <Dialog.CloseTrigger asChild>
+                          <CloseButton size="sm" />
+                        </Dialog.CloseTrigger>
+                      </Dialog.Content>
+                    </Dialog.Positioner>
+                  </Portal>
+                </Dialog.Root>
+
                 <IconButton
                   aria-label="Edit"
                   size="sm"
