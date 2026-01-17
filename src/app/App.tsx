@@ -1,12 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import Layout from "../shared/components/Layout";
-import OopsieGroupPage from "../features/oopsie-group/pages/OopsieGroupPage";
 import UserRelationPage from "../features/user-relation/pages/UserRelationPage";
 import { LoginPage } from "../features/auth/pages/LoginPage";
 import { ProtectedRoute } from "./router/ProtectedRoute";
 import { PublicRoute } from "./router/PublicRoute";
 import SignUpPage from "../features/auth/pages/SignUpPage";
 import { ChatPage } from "../features/chat/pages/ChatPage";
+import UserOopsieGroupPage from "../features/oopsie-group/pages/UserOopsieGroup";
 
 export default function App() {
   return (
@@ -38,7 +38,7 @@ export default function App() {
           </ProtectedRoute>
         }
       >
-        <Route path="oopsie-group" element={<OopsieGroupPage />} />
+        <Route path="oopsie-group" element={<UserOopsieGroupPage />} />
         <Route path="user-relation" element={<UserRelationPage />} />
         <Route path="chat/:groupId" element={<ChatPage userName="ZEKO" />} />
       </Route>

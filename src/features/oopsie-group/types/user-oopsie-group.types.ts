@@ -1,11 +1,5 @@
 import type { BaseEntity } from "../../../shared/types/base.types";
-import type { Oopsie } from "../../oopsie/types/oopsie.types";
-
-export interface OopsieGroup {
-  name: string;
-  description: string;
-  oopsies: Oopsie[];
-}
+import type { OopsieGroup } from "./oopsie-group.type";
 
 export interface UserOopsieGroup extends BaseEntity{
   userId: string;

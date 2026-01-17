@@ -6,6 +6,7 @@ export const getUserOopsieGroups = async (): Promise<UserOopsieGroup[]> => {
   return response.data;
 };
 
+
 export const assignOopsieGroupToUser = async (request: UserOopsieGroupDtoForInsertion) => {
   const response = await api.post("/api/user-oopsie-groups", request);
   return response.data;

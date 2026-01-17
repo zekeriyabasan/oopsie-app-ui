@@ -1,20 +1,14 @@
 import {
   Blockquote,
   Box,
-  Button,
-  CloseButton,
   Collapsible,
-  Dialog,
   Flex,
   HStack,
   IconButton,
-  Input,
-  Portal,
   Spacer,
   Table,
-  Textarea,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   assignOopsieGroupToUser,
   getUserOopsieGroups,
@@ -25,38 +19,64 @@ import {
   LuCircleCheckBig,
   LuMessagesSquare,
   LuPencil,
-  LuPlus,
   LuTrash2,
-  LuUserPlus,
 } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 import { addAnOopsie } from "../../oopsie/api/oopsie-api";
+import AddOopsieDialog from "../components/dialogs/AddOopsieDialog";
+import AssignUserDialog from "../components/dialogs/AssignUserDialog";
+import AddOopsieGroupDialog from "../components/dialogs/AddOopsieGroupDialog";
+import { createAOopsieGroup } from "../api/oopsie-group-api";
 
-export default function OopsieGroupPage() {
+export default function UserOopsieGroupPage() {
   const [userId, setUserId] = useState("");
   const [oopsieText, setOopsieText] = useState("");
+
+  const [oopsieGroupText, setOopsieGroupText] = useState("");
+  const [oopsieGroupDescriptionText, setOopsieGroupDescriptionText] = useState("");
+
   const [groups, setGroups] = useState<UserOopsieGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchGroups = async () => {
-      try {
-        const data = await getUserOopsieGroups();
-        setGroups(data);
-      } catch (error) {
-        console.error("Oopsie grupları alınamadı", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchGroups();
+  const fetchGroups = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await getUserOopsieGroups();
+      setGroups(data);
+    } catch (error) {
+      console.error("Oopsie grupları alınamadı", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchGroups();
+  }, [fetchGroups]);
 
   if (loading) {
     return <div>Yükleniyor...</div>;
   }
+  const addOopsieGroup = async () => {
+    try {
+      setLoading(true);
+
+      await createAOopsieGroup({
+        name: oopsieGroupText,
+        description: oopsieGroupDescriptionText,
+      });
+
+      setOopsieGroupText("");
+      setOopsieGroupDescriptionText("");
+      // dialog otomatik kapanır (ActionTrigger sayesinde)
+      await fetchGroups();
+    } catch (error) {
+      console.error("create error", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   const addOopsie = async (groupId: string) => {
     try {
       setLoading(true);
@@ -68,6 +88,8 @@ export default function OopsieGroupPage() {
 
       setOopsieText("");
       // dialog otomatik kapanır (ActionTrigger sayesinde)
+
+      await fetchGroups();
     } catch (error) {
       console.error("create error", error);
     } finally {
@@ -95,6 +117,22 @@ export default function OopsieGroupPage() {
   };
   return (
     <Flex direction="column" gap="4" w="100%">
+      <Box>
+        <Box fontSize="xl" fontWeight="bold">
+          Kullanıcı Oopsie Grupları
+        </Box>
+        <Box fontSize="sm" color="gray.500">
+          Oopsie gruplarını yönetin
+        </Box>
+      </Box>
+
+      <AddOopsieGroupDialog
+        oopsieGroupText={oopsieGroupText}
+        oopsieGroupDescriptionText={oopsieGroupDescriptionText}
+        setOopsieGroupText={setOopsieGroupText}
+        setOopsieGroupDescriptionText={setOopsieGroupDescriptionText}
+        addOopsieGroup={addOopsieGroup}
+      />
       {groups.map((group) => (
         <Blockquote.Root key={group.id} w="100%">
           <Blockquote.Content w="100%">
@@ -118,103 +156,19 @@ export default function OopsieGroupPage() {
 
                 <Spacer />
 
-                {/* Butonlar – en sağda */}
-                <Dialog.Root>
-                  <Dialog.Trigger asChild>
-                    <IconButton
-                      aria-label="Edit"
-                      size="sm"
-                      variant="ghost"
-                      colorPalette="fg"
-                    >
-                      <LuPlus />
-                    </IconButton>
-                  </Dialog.Trigger>
-                  <Portal>
-                    <Dialog.Backdrop />
-                    <Dialog.Positioner>
-                      <Dialog.Content>
-                        <Dialog.Header>
-                          <Dialog.Title>Oopsie Ekle</Dialog.Title>
-                        </Dialog.Header>
-                        <Dialog.Body>
-                          <Textarea placeholder="Oopsie Text..."
-                            value={oopsieText}
-                            onChange={(e) => setOopsieText(e.target.value)}
-                            required
-                          />
-                        </Dialog.Body>
-                        <Dialog.Footer>
-                          <Dialog.ActionTrigger asChild>
-                            <Button variant="outline">Cancel</Button>
-                          </Dialog.ActionTrigger>
-                          <Button
-                            type="submit"
-                            onClick={() => {
-                              addOopsie(group.groupId);
-                            }}
-                          >
-                            Save
-                          </Button>
-                        </Dialog.Footer>
-                        <Dialog.CloseTrigger asChild>
-                          <CloseButton size="sm" />
-                        </Dialog.CloseTrigger>
-                      </Dialog.Content>
-                    </Dialog.Positioner>
-                  </Portal>
-                </Dialog.Root>
+                <AddOopsieDialog
+                  groupId={group.groupId}
+                  oopsieText={oopsieText}
+                  setOopsieText={setOopsieText}
+                  addOopsie={() => {
+                    addOopsie(group.groupId);
+                  }}
+                />
 
-                <Dialog.Root>
-                  <Dialog.Trigger asChild>
-                    <IconButton
-                      aria-label="Assign User"
-                      size="sm"
-                      variant="ghost"
-                      colorPalette="fg"
-                    >
-                      <LuUserPlus />
-                    </IconButton>
-                  </Dialog.Trigger>
-                  <Portal>
-                    <Dialog.Backdrop />
-                    <Dialog.Positioner>
-                      <Dialog.Content>
-                        <Dialog.Header>
-                          <Dialog.Title>Gruba Kullanıcı Ekle</Dialog.Title>
-                        </Dialog.Header>
-                        <Dialog.Body>
-                          <p>
-                            Grup sohbetleri ve kullanıcının grubu görebilmesi
-                            için kullanıcı id ile ekleme yapabilirsiniz.
-                          </p>
-                          <Input
-                            placeholder="Kullanıcı ID"
-                            value={userId}
-                            onChange={(e) => setUserId(e.target.value)}
-                            required
-                          />
-                        </Dialog.Body>
-                        <Dialog.Footer>
-                          <Dialog.ActionTrigger asChild>
-                            <Button variant="outline">Cancel</Button>
-                          </Dialog.ActionTrigger>
-                          <Button
-                            type="submit"
-                            onClick={() => {
-                              handleAssignUser(group.groupId);
-                            }}
-                          >
-                            Save
-                          </Button>
-                        </Dialog.Footer>
-                        <Dialog.CloseTrigger asChild>
-                          <CloseButton size="sm" />
-                        </Dialog.CloseTrigger>
-                      </Dialog.Content>
-                    </Dialog.Positioner>
-                  </Portal>
-                </Dialog.Root>
+                <AssignUserDialog
+                  groupId={group.groupId}
+                  onSave={(groupId) => handleAssignUser(groupId)}
+                />
 
                 <IconButton
                   aria-label="Edit"
