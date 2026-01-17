@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Dialog,
   IconButton,
@@ -11,18 +10,21 @@ import { LuUserPlus } from "react-icons/lu";
 
 type AssignUserDialogProps = {
   groupId: string;
-  onSave: (groupId: string, userId: string) => void;
+  userId:string;
+  setUserId:(userId: string) => void;
+  onSave: (groupId: string) => void;
 };
 
 const AssignUserDialog: React.FC<AssignUserDialogProps> = ({
   groupId,
+  userId,
+  setUserId,
   onSave,
 }) => {
-  const [userId, setUserId] = useState("");
 
   const handleSave = () => {
     if (!userId.trim()) return;
-    onSave(groupId, userId);
+    onSave(groupId);
     setUserId("");
   };
 

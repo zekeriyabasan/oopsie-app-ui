@@ -166,7 +166,9 @@ export default function UserOopsieGroupPage() {
                 />
 
                 <AssignUserDialog
-                  groupId={group.groupId}
+                userId={userId}
+                setUserId={setUserId}
+                groupId={group.groupId}
                   onSave={(groupId) => handleAssignUser(groupId)}
                 />
 
