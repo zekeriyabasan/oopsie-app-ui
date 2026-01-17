@@ -1,22 +1,46 @@
+import { useParams } from "react-router-dom";
+import { useOopsieChat } from "../hooks";
 import { Box } from "@chakra-ui/react";
 import { MessageBubble } from "../components/MessageBubble";
 import { MessageInput } from "../components/MessageInput";
-import { useOopsieChat } from "../hooks";
-import { useParams } from "react-router-dom";
 
-interface ChatPageProps {
-  userName: string;
-}
-
-export const ChatPage: React.FC<ChatPageProps> = ({ userName }) => {
+export const ChatPage: React.FC = () => {
   const { groupId } = useParams<{ groupId: string }>();
-  const { messages, sendGroupMessage } = useOopsieChat(groupId);
+
+  const {
+    messages,
+    sendGroupMessage,
+    loadOlderMessages,
+    containerRef,
+    loadingOld,
+  } = useOopsieChat(groupId);
+
+  const onScroll = () => {
+    if (!containerRef.current) return;
+
+    if (containerRef.current.scrollTop === 0) {
+      loadOlderMessages();
+    }
+  };
 
   return (
     <Box display="flex" flexDirection="column" h="100%">
-      <Box flex="1" overflowY="auto" p={4}>
+      <Box
+        ref={containerRef}
+        flex="1"
+        overflowY="auto"
+        p={4}
+        onScroll={onScroll}
+      >
+        {loadingOld && <Box textAlign="center">Yükleniyor...</Box>}
+
         {messages.map((m) => (
-          <MessageBubble mine={false} user={userName} text={m} />
+          <MessageBubble
+            key={m.createdAt + m.senderId}
+            mine={false}
+            user={m.senderId}
+            text={m.message}
+          />
         ))}
       </Box>
 
