@@ -5,7 +5,7 @@ import type {
 } from "../types/user-relation.types";
 
 export const getUserRelations = async (): Promise<UserRelation[]> => {
-  const response = await api.get("/api/user-relations");
+  const response = await api.get("/api/user-relations/me");
   return response.data;
 };
 

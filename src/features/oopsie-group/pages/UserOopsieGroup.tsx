@@ -137,7 +137,7 @@ export default function UserOopsieGroupPage() {
         <Blockquote.Root key={group.id} w="100%">
           <Blockquote.Content w="100%">
             <Collapsible.Root defaultOpen>
-              <Collapsible.Trigger
+              <Collapsible.Trigger 
                 w="100%"
                 display="flex"
                 alignItems="center"

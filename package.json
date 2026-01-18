@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.14.1",
     "@microsoft/signalr": "^10.0.0",
     "axios": "^1.13.2",
+    "dayjs": "^1.11.19",
     "framer-motion": "^12.23.25",
     "prop-types": "^15.8.1",
     "react": "19.2.3",
