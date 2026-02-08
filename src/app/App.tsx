@@ -40,7 +40,7 @@ export default function App() {
       >
         <Route path="oopsie-group" element={<UserOopsieGroupPage />} />
         <Route path="user-relation" element={<UserRelationPage />} />
-        <Route path="chat/:groupId" element={<ChatPage userName="ZEKO" />} />
+        <Route path="chat/:groupId" element={<ChatPage />} />
       </Route>
     </Routes>
   );
